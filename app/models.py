@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from werkzeug.security import generate_password_hash, check_password_hash
+
 from flask.ext.login import UserMixin
 
 from . import login_manager
@@ -51,6 +54,7 @@ class Product(db.Model):
     product_name = db.Column(db.String(20), nullable=False)
     description = db.Column(db.String(200))
     tracking_items = db.relationship('TrackingItem', backref='product')
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
 
     def __repr__(self):
         return '<Product %r>' % self.product_name
@@ -60,7 +64,28 @@ class TrackingItem(db.Model):
     __tablename__ = 'tracking_items'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
+    pn = db.Column(db.String(20), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'))
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
 
     def __repr__(self):
         return '<Tracking Item %r>' % self.name
+
+
+class Machine(db.Model):
+    __tablename__ = 'machines'
+    id = db.Column(db.Integer, primary_key=True)
+    sn = db.Column(db.String(20), nullable=False)
+    tracking_records = db.relationship('TrackingRecord', backref='machine')
+    is_active = db.Column(db.Boolean, nullable=False, default=True)
+    created_at = db.Column(db.DateTime)
+    last_updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
+
+    def __repr__(self):
+        return '<Machine %r>' % self.sn
+
+
+class TrackingRecord(db.Model):
+    __tablename__ = 'tracking_records'
+    id = db.Column(db.Integer, primary_key=True)
+    revision = db.Column(db.Integer, nullable=False)
