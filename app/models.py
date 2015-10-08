@@ -45,7 +45,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, pwd)
 
     def __repr__(self):
-        return '<User %r>' % (self.last_name, self.first_name)
+        return '<User %r, %r>' % (self.last_name, self.first_name)
 
 
 class Product(db.Model):
@@ -69,12 +69,13 @@ class TrackingItem(db.Model):
     is_active = db.Column(db.Boolean, nullable=False, default=True)
 
     def __repr__(self):
-        return '<Tracking Item %r>' % self.name
+        return '<Tracking Item: %r, PN: %r>' % (self.name, self.pn)
 
 
 class Machine(db.Model):
     __tablename__ = 'machines'
     id = db.Column(db.Integer, primary_key=True)
+    product_name = db.Column(db.String(20), nullable=False)
     sn = db.Column(db.String(20), nullable=False)
     tracking_records = db.relationship('TrackingRecord', backref='machine')
     is_active = db.Column(db.Boolean, nullable=False, default=True)
@@ -82,10 +83,18 @@ class Machine(db.Model):
     last_updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow())
 
     def __repr__(self):
-        return '<Machine %r>' % self.sn
+        return '<Machine: %r, SN: %r>' % (self.product_name, self.sn)
 
 
 class TrackingRecord(db.Model):
     __tablename__ = 'tracking_records'
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    pn = db.Column(db.String(20), nullable=False)
     revision = db.Column(db.Integer, nullable=False)
+    is_latest = db.Column(db.Boolean, nullable=False, default=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    machine_id = db.Column(db.Integer, db.ForeignKey('machines.id'))
+
+    def __repr__(self):
+        return '<Tracking record: %r, PN: %r, Rev: %r>' % (self.name, self.pn, self.revision)
