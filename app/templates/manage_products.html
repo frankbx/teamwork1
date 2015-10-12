@@ -1,2 +1,28 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends 'application.html' %}
+{% block title %} Teamwork - Product Management {% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h2>Product Management</h2>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.product_name }}</td>
+                    <td>{{ product.description }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br>
+
+        <div><a href="/product/new">Add New Product</a></div>
+        <div><a href="/admin">Back</a></div>
+    </div>
+
+
+{% endblock %}

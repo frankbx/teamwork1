@@ -1,2 +1,28 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% extends 'application.html' %}
+{% block title %} Teamwork - Machine Management {% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h2>Machine Management</h2>
+        </div>
+        <table class="table">
+            <tr>
+                <th>Product</th>
+                <th>SN</th>
+            </tr>
+            {% for machine in machines %}
+                <tr>
+                    <td>{{ machine.product_name }}</td>
+                    <td>{{ machine.sn }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <br>
+
+        <div><a href="/machine/new">Add New Machine</a></div>
+        <div><a href="/admin">Back</a></div>
+    </div>
+
+
+{% endblock %}

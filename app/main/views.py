@@ -3,8 +3,8 @@ from flask import render_template, redirect, url_for, request, flash
 from flask.ext.login import login_user, logout_user, login_required
 
 from app.main import main
-from .forms import LoginForm, UserForm
-from ..models import User
+from .forms import LoginForm, UserForm, MachineForm
+from ..models import User, Machine
 
 
 @main.route('/')
@@ -41,14 +41,39 @@ def logout():
 @main.route('/manage_users', methods=['GET', 'POST'])
 @login_required
 def manage_users():
+    users = User.query.all()
+
+    return render_template('manage_users.html', users=users)
+
+
+@main.route('/manage_machines', methods=['GET', 'POST'])
+@login_required
+def manage_machines():
+    machines = Machine.query.all()
+
+    return render_template('manage_machines.html', machines=machines)
+
+
+@main.route('/user/new', methods=['GET', 'POST'])
+@login_required
+def new_user():
     user_form = UserForm()
     if user_form.validate_on_submit():
-        # user = User.query.filter_by(sso=user_form.sso.data).first()
-        # if user is not None:
-        #     flash('The user already exists!')
-        #     # return redirect(url_for('main.manage_users'))
-        # else:
-        #     pass
-        return redirect(url_for('main.index'))
+        pass
+    return render_template('new_user.html', user_form=user_form)
 
-    return render_template('manage_users.html', user_form=user_form)
+
+@main.route('/machine/new', methods=['GET', 'POST'])
+@login_required
+def new_machine():
+    form = MachineForm()
+    if form.validate_on_submit():
+        product = Machine()
+        product.product_name = form.product_name.data
+        product.description = form.description.data
+        product.is_active = form.is_active.data
+        # db.session.add(product)
+        # db.session.commit()
+        flash('New Machine created successfully.')
+        return redirect(url_for('main.manage_machines'))
+    return render_template('new_machine.html', form=form)

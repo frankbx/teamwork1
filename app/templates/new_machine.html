@@ -1,0 +1,14 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends 'application.html' %}
+{% block title %} Teamwork - New Machine {% endblock %}
+{% block page_content %}
+    <div class="container">
+        <div class="page-header">
+            <h2>Create New Machine</h2>
+        </div>
+        <div class="bg-warning">All fields are mandatory. Enter "None" if the configuration is not available.</div>
+        <div class="col-md-6">{{ wtf.quick_form(form) }}</div>
+    </div>
+    <br>
+    <div><a href="/manage_machines">Back</a></div>
+{% endblock %}
