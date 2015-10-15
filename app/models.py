@@ -21,6 +21,10 @@ class Role(db.Model):
     def __repr__(self):
         return '<Role %r>' % self.role_name
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -45,6 +49,10 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User %r, %r>' % (self.last_name, self.first_name)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
 
 class Machine(db.Model):
@@ -79,3 +87,7 @@ class Machine(db.Model):
 
     def __repr__(self):
         return '<Machine: %r, SN: %r>' % (self.product_name, self.sn)
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()

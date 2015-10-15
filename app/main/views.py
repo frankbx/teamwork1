@@ -59,7 +59,15 @@ def manage_machines():
 def new_user():
     user_form = UserForm()
     if user_form.validate_on_submit():
-        pass
+        user = User()
+        user.sso = user_form.sso.data
+        user.first_name = user_form.first_name.data
+        user.last_name = user_form.last_name.data
+        user.email = user_form.email.data
+        user.password = user_form.password.data
+        user.role_id = user_form.role.data
+        user.save()
+        return redirect(url_for('main.manage_users'))
     return render_template('new_user.html', user_form=user_form)
 
 
@@ -68,12 +76,12 @@ def new_user():
 def new_machine():
     form = MachineForm()
     if form.validate_on_submit():
-        product = Machine()
-        product.product_name = form.product_name.data
-        product.description = form.description.data
-        product.is_active = form.is_active.data
-        # db.session.add(product)
-        # db.session.commit()
+        machine = Machine()
+        # machine.product_name = form.product_name.data
+        # machine.description = form.description.data
+        # machine.is_active = form.is_active.data
+        machine = form.populate_obj()
+        machine.save()
         flash('New Machine created successfully.')
         return redirect(url_for('main.manage_machines'))
     return render_template('new_machine.html', form=form)
